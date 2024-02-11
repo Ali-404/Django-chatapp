@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "App"
+    "App",
 ]
 
 MIDDLEWARE = [
@@ -48,7 +50,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        
 ]
+
+
+
 
 ROOT_URLCONF = 'chatapp.urls'
 
@@ -68,7 +74,9 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = 'chatapp.routing.application'
 WSGI_APPLICATION = 'chatapp.wsgi.application'
+
 
 
 # Database
@@ -83,7 +91,11 @@ DATABASES = {
 
 
 # Password validation
-# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
+# https://docs.djangoprojec
+# t.com/en/5.0/ref/settings/#auth-password-validators
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+)
 
 AUTH_PASSWORD_VALIDATORS = [
     {

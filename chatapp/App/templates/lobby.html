@@ -1,0 +1,37 @@
+{% extends "base.html"  %}
+
+{% block title%}Login{% endblock%}
+
+<!-- Main -->
+
+{% block content %}
+    
+    <div class="container  d-flex flex-column align-items-center justify-content-center gap-2 p-4">
+        <h1>Welcome to the Lobby {{user.get_username}}. </h1>
+        <form style="min-width: 40%;" id="host_form" action="../CreateRoom/" method="post" class=" min-vh-100 d-flex flex-column gap-2 align-items-center justify-content-center">
+            {% csrf_token %}
+            <label class="h1 text-center form-label" for="">Host Room</label>
+            <input type="text" class="form-control"  id="room_name" name="room_name" placeholder="Enter the room's name ..." required>
+            <input type="password" class="form-control"  id="room_password" name="room_password" placeholder="Enter the room's password (optional) ..." >
+           
+            <input type="submit" class="form-control btn btn-success" value="Host" >
+           
+            <a type="submit" href="#join_form" class="form-control btn btn-outline-success" >Join Room</a>
+            
+        </form>
+        <hr class="w-100">
+        <form style="min-width: 40%;" id="join_form" action="../JoinRoom/" method="post" class="min-vh-100 d-flex flex-column gap-2 align-items-center justify-content-center">
+            {% csrf_token %}
+            <label class="h1 text-center form-label" for="">Join Room</label>
+            <input type="text" class="form-control" id="room_name" name="room_name" placeholder="Enter the room's name ..." required>
+            <!-- <input type="password" class="form-control"  id="room_password" name="room_password" placeholder="Enter the room's password (optional) ..." > -->
+            
+            <input type="submit" class="form-control btn btn-success" value="Join" >
+            
+            <a type="submit" href="#host_form" class="form-control btn btn-outline-success" >Host Room</a>
+
+        </form>
+        <a href="../logout/" class="btn btn-outline-danger">Logout</a>
+
+    </div>
+{% endblock%}

@@ -1,0 +1,33 @@
+{% extends "base.html"  %}
+
+{% block title%}Login{% endblock%}
+
+<!-- Main -->
+
+{% block content %}
+<div class="container min-vh-100 d-flex flex-column align-items-center justify-content-center">
+    <form class="form d-flex flex-column gap-3"  action="" method="post" style="min-width: 35%;">
+        {% csrf_token %}
+        <h1 class="w-100 text-center">Login Panel</h1>
+        <div>
+            <label class="form-label" for="username">Username</label>
+            <input class="form-control" id="username" required  name="username" type="text">
+        </div>
+
+        <div>
+            <label class="form-label" for="password">Password</label>
+            <input class="form-control" id="password" required  name="password" type="password">
+        </div>
+        
+        <p>Don't have an account yet ? <a href="../register/" class="link-success text-decoration-none">Create Account</a></p>
+
+        <div class="d-flex align-items-center gap-3 justify-content-center">
+            <input class="btn btn-success flex-fill" type="submit" value="Login">
+            <input  class="btn btn-light flex-fill" type="reset" value="Reset">
+        </div>
+
+
+
+    </form>
+</div>
+{% endblock%}

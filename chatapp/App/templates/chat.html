@@ -1,0 +1,162 @@
+{% extends "base.html"  %}
+
+{% block title%}Login{% endblock%}
+
+<!-- Main -->
+
+{% block content %}
+    
+    <style>
+        .message{
+            min-width: 10%;
+            border-radius: 15px;
+            padding: 10px 15px;
+            max-width: 75%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message p {
+            flex: 1;
+        }
+
+        .message small{
+            font-size: 10px;
+            align-self: flex-end;
+            opacity: 0.7;
+        }
+
+        .client_message{
+            align-self: flex-end;
+            background-color: var(--bs-info);
+            border-top-right-radius: 0;
+        }
+        
+        .server_message{
+            align-self: flex-start;
+            background-color: rgb(194, 209, 215);
+            border-top-left-radius: 0;
+        }
+
+        
+    </style>
+
+
+    <nav class="shadow nav navbar navbar-expand bg-primary position-fixed w-100 z-1 top-0">
+        <div class="container">
+            <h1 class="navbar-brand text-white">[{{room.id}}] {{ room.name }}</h1>
+            <a href="../../lobby/" class="link link-light text-decoration-none shadow p-2" >Back To Lobby</a>
+
+        </div>
+    </nav>
+
+    <div id="messagesContainer" class="container  d-flex flex-column min-vh-100 p-3 gap-3 mb-5 mt-5">
+            <!-- {% if messages  %}
+                <div class="message client_message shadow">
+                    Lorem ipsum dolor sit amet.
+                </div>
+                <div class="message client_message shadow">
+                    Lorem, ipsum.
+                </div>
+                <div class="message server_message shadow">
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Accusantium, veritatis!
+                </div>
+
+            {% else %}
+                <small class="text-center position-absolute top-50 start-50 translate-middle">✉ Start Texting Now ..</small>
+            {% endif %} -->
+
+            <small id="loading" class="text-center position-absolute top-50 start-50 translate-middle">Loading ..</small>
+     
+
+
+        <!-- controle -->
+    </div>
+    <form action="../send_msg/{{room.id}}" class="d-flex align-content-center position-fixed bottom-0 start-50 translate-middle-x w-100 gap-2 p-3 z-1 " method="post">
+        {% csrf_token %}
+        <input type="text"  placeholder="Type here ..." required id="message" name="message" class="shadow  form-control flex-fill">
+        <input type="submit" class="btn btn-success shadow p-2" value="Send" >
+    </form>
+
+    <script>
+        const data = '{{ messages|safe }}'
+        const messages = JSON.parse(data);
+        const messagesContainer = document.getElementById("messagesContainer")
+
+        const addMessage = (message) => {
+            messageSender = message.fields.user
+            
+            content = message.fields.content 
+            created_at = message.fields.created_at
+            name = message.fields.sender_name
+
+            newElement = document.createElement("div")
+            newElement.setAttribute("id","msg" + message.pk.toString())
+            newElement.className = 'message shadow'
+            newElement.innerHTML = `
+            <p>${content}</p>
+            <small>${created_at}</small>
+            <small>${messageSender != Number("{{user.id}}") ? name : "You"}</small>
+            `
+
+            if (messageSender == Number('{{ user.id }}')) {
+                newElement.classList.add("client_message")
+            }else {
+                newElement.classList.add("server_message")
+            }
+
+            
+            messagesContainer.appendChild(newElement)
+            newElement.scrollIntoView()
+        }
+
+        if (!messages || messages.length <= 0){
+            messagesContainer.innerHTML = `<small class="text-center position-absolute top-50 start-50 translate-middle">✉ Start Texting Now ..</small>`
+        }else 
+        {
+
+            messages.forEach(message => {
+                
+                addMessage(message)
+            });
+        }
+
+        
+
+        document.getElementById('loading').remove()
+
+        messagesContainer.lastElementChild.scrollIntoView({behavior:messages.length > 7 ? 'instant' : "smooth"})
+
+
+        const reloadMessages = () => {
+            
+            $.ajax({
+                method:"GET",
+                url:"{% url 'get_messages' %}",
+                success:(response) => {
+
+                    let messages = response["messages"]
+                    const messagesArray = JSON.parse(messages)
+                    
+                    messagesArray.forEach(msg => {
+                        const eleme = document.querySelector(`.message#msg${msg.pk}`)
+                        if (!eleme){
+                            addMessage(msg)
+                            console.log("New Message Loaded !")
+                        }
+                    })
+                },
+                data:{
+                    "room":"{{ room.id }}"
+
+                }
+            })
+        }
+
+        setInterval(reloadMessages,10)
+
+   
+    </script>
+
+{% endblock%}
