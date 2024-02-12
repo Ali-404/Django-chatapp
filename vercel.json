@@ -1,13 +1,14 @@
 {
-    "builds": [{
+    "builds": [
+      {
         "src": "chatapp/wsgi.py",
-        "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.12.0" }
-    }],
+        "use": "@vercel/python"
+      }
+    ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "chatapp/wsgi.py"
-        }
+      {
+        "src": "/(.*)",
+        "dest": "chatapp/wsgi.py"
+      }
     ]
-}
+  }
